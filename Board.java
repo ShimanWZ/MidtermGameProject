@@ -14,7 +14,6 @@ public class Board {
 	
 	public void drawRawBoard(int initX, int initY) {}
 	public void drawBoardContents(int initX, int initY) {}
-	public boolean isValidForPlacing(int i, int j , Pawn pawn) {return true;}
 	public BoardContents[][] getBoardArray(){
 	return board;
 	}
