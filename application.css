@@ -1,0 +1,12 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property*/
+
+
+ #MainMenuBottons {
+ 	-fx-background-color: rgba(54, 71, 119, 0.7);
+ }
+ 
+ 
+ #MainMenuBottons:hover {
+ 	-fx-background-color: rgba(54, 71, 119, 1);	
+ }
+ 
