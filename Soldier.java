@@ -1,48 +1,53 @@
 package GameCore;
 
+import UI.MainGameControler;
+
 public class Soldier extends Pawn{
 	boolean placed, isActive;
 	int counter, MAXCounter = 1, curI, curJ;
 	
 	
+	
+	//-------------------attack methods------------//
+	public static void soldierAttack(double x, double y, Player player) {
+		Soldier soldier = new Soldier();
+		soldier.attack(x,y,player);
+	}
 	@Override
-	public void attack(int x, int y, Player player) {
+	protected void attack(double x, double y, Player player) {
 		int pawnI = Utils.getIndexI(y);
 		int pawnJ = Utils.getIndexJ(x);
 		
 		if (isValidForAttack(pawnI,pawnJ, player)) {
-			player.setGameBoard(pawnI, pawnJ, BoardContents.attacked);
+			player.setGameBoard(pawnI, pawnJ, BoardContents.ATTACKED);
+			Utils.changeTurn(MainGameControler.game, player);
 		}
 	}
-	
-	
-	@Override
-	public void place(int x, int y, Player player) {
-		int pawnI = Utils.getIndexI(y);
-		int pawnJ = Utils.getIndexJ(x);
-		
-		if (isValidForPlacing(pawnI,pawnJ, player)) {
-			player.setGameBoard(pawnI, pawnJ, BoardContents.soldier);
-		}
-	}
-
-
 	@Override
 	protected boolean isValidForAttack(int i, int j, Player player) {
-		if (player.getGameBoard().getBoardArray()[i][j] != BoardContents.attacked) return true;
+		if (player.getGameBoard().getBoardArray()[i][j] != BoardContents.ATTACKED) return true;
 		else return false;
 	}
+	
+	
+	
+	//-----------------placing methods----------------------//
+	public static void placeSoldier(double x, double y, Player player) {
+		Soldier soldier = new Soldier();
+		soldier.place(x, y, player);
+	}
+	protected void place(double x, double y, Player player) {
+		int pawnI = Utils.getInitSceneIndexI(y);
+		int pawnJ = Utils.getInitSceneIndexJ(x);
 
-
-	@Override
+		if (isValidForPlacing(pawnI,pawnJ, player)) {
+			player.increaseSoldierCount();
+			player.setGameBoard(pawnI, pawnJ, BoardContents.SOLDIER);
+		}
+	}
 	protected boolean isValidForPlacing(int i, int j, Player player) {
-		if (player.getGameBoard().getBoardArray()[i][j] == BoardContents.empty) return true;
+		if (player.getGameBoard().getBoardArray()[i][j] == BoardContents.EMPTY) return true;
 		else return false;
-	}
-
-	
-
-
-	
+	}	
 
 }

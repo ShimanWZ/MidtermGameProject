@@ -1,10 +1,10 @@
 package GameCore;
 
 public enum BoardContents {
-	soldier,
-	cavalry,
-	castle,
-	headquarter,
-	empty,
-	attacked
+	SOLDIER,
+	CAVALRY,
+	CASTLE,
+	HEADQUARTER,
+	EMPTY,
+	ATTACKED
 }

@@ -4,9 +4,39 @@
  #MainMenuBottons {
  	-fx-background-color: rgba(54, 71, 119, 0.7);
  }
- 
- 
  #MainMenuBottons:hover {
  	-fx-background-color: rgba(54, 71, 119, 1);	
  }
- 
+  #SettingMenuBottons {
+ 	-fx-background-color: transparent;	
+ }
+ #SettingMenuBottons:hover {
+ 	-fx-background-color: rgba(255,255,255,0.1);
+ }
+ #GameBottons {
+ 	-fx-background-color: transparent;	
+ }
+ #GameBottons:hover {
+ 	-fx-background-color: rgba(255,255,255,0.1);
+ }
+ #pane {
+ 	-fx-background-color :rgb(14, 29, 76);	
+ }
+.check-box:selected .mark {
+-fx-background-color: white;
+}
+
+.check-box:selected .box {
+-fx-background-color: rgb(14, 29, 76);	
+}
+.check-box .box {
+-fx-background-color: rgb(14, 29, 76);	
+-fx-border-color:white;
+-fx-border-radius:3px; 
+}
+.text-field {
+	-fx-background-color: rgb(14, 29, 76);	
+	-fx-border-color:white;
+	-fx-border-radius:3px; 
+	-fx-text-fill: white ;
+}

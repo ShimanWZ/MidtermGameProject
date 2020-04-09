@@ -1,33 +1,33 @@
 package UI;
 	
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 
 
 public class Main extends Application {
 	
 	static Stage window;
-	Scene mainMenu;
-	static Scene settingMenu;
-	
+	static Scene mainMenu, settingMenu, initialize, gameScene;
 	@Override
-	public void start(Stage primaryStage) {
+	public void start(Stage primaryStage) throws IOException {
 		window = primaryStage;
-		try {
-			Parent root = FXMLLoader.load(getClass().getResource("MainMenue.fxml"));
-			Scene scene = new Scene(root);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			window.setScene(scene);
-			window.show();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		initializemainMenu();
+		window.setScene(mainMenu);
+		window.show();
 	}
 	
+	//----------------------initializing scenes---------------------------------//
+	private void initializemainMenu() throws IOException {
+		Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
+		mainMenu = new Scene(root);
+		mainMenu.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+	}
+	//-------------------------------main---------------------------------------------//
 	public static void main(String[] args) {
 		launch(args);
 	}

@@ -1,20 +1,27 @@
 package GameCore;
 
 public class Board {
-	BoardContents[][] board ;
+	private BoardContents[][] board ;
 	
 	public Board() {
 		board = new BoardContents[Game.boardSize][Game.boardSize];
 		for (int i = 0 ; i < Game.boardSize ; i++) {
 			for( int j = 0 ; j < Game.boardSize ; j++) {
-				board[i][j] = BoardContents.empty;
+				board[i][j] = BoardContents.EMPTY;
 			}
 		}
 	}
-	
-	public void drawRawBoard(int initX, int initY) {}
-	public void drawBoardContents(int initX, int initY) {}
 	public BoardContents[][] getBoardArray(){
-	return board;
+		return board;
+	}
+	public String toString() {
+		String s = new String();
+		for (int i = 0 ; i < Game.boardSize ; i++) {
+			for( int j = 0 ; j < Game.boardSize ; j++) {
+				s += board[i][j] + " ";
+			}
+			s += "\n";
+		}
+		return s;
 	}
 }

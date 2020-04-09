@@ -1,46 +1,64 @@
 package GameCore;
 
-import java.util.ArrayList;
-
 public class Player {
+	public static final int MAX_SOLDIER_COUNT = 5, MAX_CAVALRY_COUNT = 3, MAX_HEADQU_COUNT = 1, MAX_CASTLE_COUNT = 2;
+	
+	private int soldierCount, cavalryCount, headquarterCount, castleCount;
 	private boolean isTurn;
 	private Board gameBoard;
-	 Soldier s1, s2, s3, s4, s5;
-	ArrayList<Pawn> PawnsArray = new ArrayList<Pawn>();
-	
 	public Player() {
 		gameBoard = new Board();
-		addSoldiers();
-		
 	}
 	
 	
-	public void drawBoard() {
-		
-	}
 	public void setTurn(Boolean isTurn) {
 		this.isTurn = isTurn;
 	}
 	public boolean isTurn() {
 		return isTurn;
 	}
-
-
+	
+	
 	public Board getGameBoard() {
 		return gameBoard;
 	}
-
-
 	public void setGameBoard(int i, int j, BoardContents content) {
 		this.gameBoard.getBoardArray()[i][j] = content;
 	}
 	
-	//initializing pawns
-	private void addSoldiers() {
-		PawnsArray.add(s1);
-		PawnsArray.add(s2);
-		PawnsArray.add(s3);
-		PawnsArray.add(s4);
-		PawnsArray.add(s5);
+	//------------------- getters-----------------//
+	public int getSoldierCount() {
+		return soldierCount;
+	}
+	public int getCavalryCount() {
+		return cavalryCount;
+	}
+	public int getCastleCount() {
+		return castleCount;
+	}
+	public int getHeadquarterCount() {
+		return headquarterCount;
+	}
+	
+	//------------------ increment----------------//
+	public void increaseSoldierCount() {
+		this.soldierCount++ ;
+	}
+	public void increaseCavalryCount() {
+		this.cavalryCount++ ;
+	}
+	public void increaseHeadquarterCount() {
+		this.headquarterCount++ ;
+	}
+	public void increaseCastleCount() {
+		this.castleCount++ ;
+	}
+	
+	//--------------------------------------------//
+	
+	public boolean areAllPawnsPlaced() {
+		boolean b = this.getCastleCount()== MAX_CASTLE_COUNT && this.getCavalryCount() == MAX_CAVALRY_COUNT
+				&& this.getHeadquarterCount() == MAX_HEADQU_COUNT && this.getSoldierCount() == MAX_SOLDIER_COUNT;
+		return b;
 	}
 }
