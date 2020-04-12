@@ -3,10 +3,7 @@ package GameCore;
 import UI.MainGameControler;
 
 public class Soldier extends Pawn{
-	boolean placed, isActive;
-	int counter, MAXCounter = 1, curI, curJ;
-	
-	
+
 	
 	//-------------------attack methods------------//
 	public static void soldierAttack(double x, double y, Player player) {
@@ -21,6 +18,7 @@ public class Soldier extends Pawn{
 		if (isValidForAttack(pawnI,pawnJ, player)) {
 			player.setGameBoard(pawnI, pawnJ, BoardContents.ATTACKED);
 			Utils.changeTurn(MainGameControler.game, player);
+			MainGameControler.getTurn().incrementPawnSws();
 		}
 	}
 	@Override
@@ -31,7 +29,7 @@ public class Soldier extends Pawn{
 	
 	
 	
-	//-----------------placing methods----------------------//
+	//-------------------------placing methods----------------------//
 	public static void placeSoldier(double x, double y, Player player) {
 		Soldier soldier = new Soldier();
 		soldier.place(x, y, player);

@@ -26,7 +26,10 @@ public class MainMenuControler {
 	}
 	
 	public void resume() throws IOException{
-		
+		Parent gameScene = FXMLLoader.load(getClass().getResource("MainGameScene.fxml"));
+			Main.gameScene = new Scene(gameScene);
+			Main.gameScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			Main.window.setScene(Main.gameScene);
 	}
 	
 

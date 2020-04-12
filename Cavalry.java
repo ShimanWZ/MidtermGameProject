@@ -3,9 +3,9 @@ package GameCore;
 import UI.MainGameControler;
 
 public class Cavalry extends Pawn{
-	boolean placed, isActive;
-	static boolean horizontalSw;
-	int counter, MAXCounter = 2, curI, curJ;
+	private boolean isActive = true;
+	private static boolean horizontalSw;
+	private int cavalrySw = 0;
 	
 	
 	//-------------------------attack methods-------------------------------//
@@ -25,6 +25,7 @@ public class Cavalry extends Pawn{
 		if (pawnI + 1 < Game.boardSize && isValidForVerticalAttack(pawnI, pawnJ, player)) {
 			player.setGameBoard(pawnI, pawnJ, BoardContents.ATTACKED);
 			player.setGameBoard(pawnI + 1, pawnJ, BoardContents.ATTACKED);
+			afterAttack(MainGameControler.getTurn());
 			Utils.changeTurn(MainGameControler.game, player);
 		}
 	}
@@ -35,8 +36,8 @@ public class Cavalry extends Pawn{
 		if (pawnJ + 1 < Game.boardSize && isValidForHorizontalAttack(pawnI, pawnJ, player)) {
 			player.setGameBoard(pawnI, pawnJ, BoardContents.ATTACKED);
 			player.setGameBoard(pawnI, pawnJ + 1, BoardContents.ATTACKED);
+			afterAttack(MainGameControler.getTurn());
 			Utils.changeTurn(MainGameControler.game, player);
-
 		}
 		
 	}
@@ -103,17 +104,37 @@ public class Cavalry extends Pawn{
 			return true;
 		} else return false;
 	}
-	
-	
+	//------------------------attack restriction methods---------------------------//
+	private void afterAttack(Player player) {
+		player.incrementPawnSws();
+		player.getCavalry().setIsActive(false);
+		this.setCavalrySw(0);
+	}
+	private void setIsActive(boolean b) {
+		isActive = b;
+	}
+	private void setCavalrySw(int cavalrySw) {
+		this.cavalrySw = cavalrySw;
+	}
+	public void increasePawnSw() {
+		this.cavalrySw++;
+		if (this.cavalrySw == 2) {
+			this.isActive = true;
+			cavalrySw = 0;
+		}
+	}
+	public boolean isActive() {
+		return isActive;
+	}
 	
 	//---------------------------------------------------//
 	public static boolean isHorizontalSw() {
 		return horizontalSw;
 	}
-	public static void setHorizontalSw(boolean horizontalSw) {
+	public static void setHorizontalSw(boolean horizontalSw) {			
 		Cavalry.horizontalSw = horizontalSw;
 	}
-	
+		
 	
 	//empty methods
 	protected void attack(double x, double y, Player player) {}

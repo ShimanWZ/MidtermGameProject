@@ -11,9 +11,11 @@ public class Board {
 			}
 		}
 	}
+	
 	public BoardContents[][] getBoardArray(){
 		return board;
 	}
+	
 	public String toString() {
 		String s = new String();
 		for (int i = 0 ; i < Game.boardSize ; i++) {

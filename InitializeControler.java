@@ -3,10 +3,18 @@ package UI;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import GameCore.*;
+
+import GameCore.BoardContents;
+import GameCore.Castle;
+import GameCore.Cavalry;
+import GameCore.Game;
+import GameCore.HeadQuarter;
+import GameCore.Player;
+import GameCore.Soldier;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -18,11 +26,12 @@ import javafx.scene.shape.Rectangle;
 
 public class InitializeControler {
 	public AnchorPane pane;
+	public Label label;
 	static Game game = new Game();
 	private Player turn;	
 	
 	public void initialize() {
-		turn = game.player1;
+		turn = game.getPlayer1();
 		drawRawBoard();
 	}
 	
@@ -77,11 +86,12 @@ public class InitializeControler {
 		drawXs();
 		
 		//check for placing status , if done then....
-		if (game.player1.areAllPawnsPlaced() && turn == game.player1) {
+		if (game.getPlayer1().areAllPawnsPlaced() && turn == game.getPlayer1()) {
 			drawRawBoard();
-			turn = game.player2;
+			turn = game.getPlayer2();
+			label.setText("player two");
 		}
-		if (game.player2.areAllPawnsPlaced()) setToGameScene();
+		if (game.getPlayer2().areAllPawnsPlaced()) setToGameScene();
 	}
 	
 	//-------------------------------drawing methods-----------------------------//

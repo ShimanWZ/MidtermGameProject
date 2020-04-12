@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -38,5 +39,10 @@
             <Font name="Architects Daughter" size="25.0" />
          </font>
       </Button>
+      <Label fx:id="label" layoutX="100.0" layoutY="21.0" prefHeight="54.0" prefWidth="226.0" text="player one" textFill="WHITE">
+         <font>
+            <Font name="Architects Daughter" size="27.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

@@ -3,8 +3,8 @@ package GameCore;
 import UI.MainGameControler;
 
 public class HeadQuarter extends Pawn {
-	boolean placed, isActive;
-	int counter, MAXCounter = 4;
+	private boolean isActive = true;
+	private int headQuarterSw = 0;
 	
 	//------------------attack methods------------------//
 	public static void headQuarterAttack(double x, double y, Player player) {
@@ -22,6 +22,7 @@ public class HeadQuarter extends Pawn {
 					player.setGameBoard(c1, c2, BoardContents.ATTACKED);
 				}
 			}
+			afterAttack(MainGameControler.getTurn());
 			Utils.changeTurn(MainGameControler.game, player);
 		}		
 	}
@@ -61,5 +62,28 @@ public class HeadQuarter extends Pawn {
 			}
 		}
 		return true;
+	}
+	//------------------------attack restriction methods---------------------------//
+	
+	private void afterAttack(Player player) {
+		player.incrementPawnSws();
+		player.getHeadquarter().setIsActive(false);
+		this.setHeadQuarterSw(0);
+	}
+	private void setIsActive(boolean b) {
+		isActive = b;
+	}
+	public void increasePawnSw() {
+		this.headQuarterSw++;
+		if (this.headQuarterSw == 4) {
+			this.isActive = true;
+			headQuarterSw = 0;
+		}
+	}
+	public void setHeadQuarterSw(int headQuarterSw) {
+		this.headQuarterSw = headQuarterSw;
+	}
+	public boolean isActive() {
+		return this.isActive;
 	}
 }

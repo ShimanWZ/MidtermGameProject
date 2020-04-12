@@ -25,7 +25,7 @@ public class Utils {
 	}
 	public static int getIndexI(double y) {
 		int i;
-		double curY, width = (double)Game.boardWidth / Game.boardSize, initY = 25;
+		double curY, width = (double)Game.boardWidth / Game.boardSize, initY = 75;
 	
 		//drawing horizontal lines
 		for (curY = initY , i = 0; curY <= initY + Game.boardWidth ; curY += width , i++) {
@@ -51,7 +51,7 @@ public class Utils {
 	}
 	
 	public static void changeTurn(Game game, Player turn) {
-		if (turn == game.player1) MainGameControler.setIsGonnaAtt(game.player2);
-		else MainGameControler.setIsGonnaAtt(game.player1);
+		if (turn == game.getPlayer1()) MainGameControler.setIsGonnaAtt(game.getPlayer2());
+		else MainGameControler.setIsGonnaAtt(game.getPlayer1());
 	}
 }

@@ -3,8 +3,8 @@ package GameCore;
 import UI.MainGameControler;
 
 public class Castle extends Pawn{
-	boolean placed, isActive;
-	int counter, MAXCounter = 3, curI, curJ;
+	private boolean isActive = true;
+	private int castleSw = 0;
 	
 	
 	//------------------------attack methods-----------------------//
@@ -22,9 +22,9 @@ public class Castle extends Pawn{
 			player.setGameBoard(pawnI + 1, pawnJ, BoardContents.ATTACKED);
 			player.setGameBoard(pawnI, pawnJ + 1, BoardContents.ATTACKED);
 			player.setGameBoard(pawnI + 1, pawnJ + 1, BoardContents.ATTACKED);
+			afterAttack(MainGameControler.getTurn());
 			Utils.changeTurn(MainGameControler.game, player);
 		}
-		
 	}
 	@Override
 	protected boolean isValidForAttack(int i, int j, Player player) {
@@ -35,7 +35,7 @@ public class Castle extends Pawn{
 		if (b1 && b2 && b3 && b4) return true;
 		else return false;
 	}
-	//----------------placing methods-----------------------------//
+	//------------------------placing methods-----------------------------//
 	public static void placeCastle(double x, double y, Player player) {
 		Castle c = new Castle();
 		c.place(x, y, player);
@@ -63,5 +63,26 @@ public class Castle extends Pawn{
 		if (b1 && b2 && b3 && b4) return true;
 		else return false;
 	}
-
+	//----------------------------attack restriction methods---------------------------//
+	private void afterAttack(Player player) {
+		player.incrementPawnSws();
+		player.getCastle().setIsActive(false);
+		this.setCastleSw(0);
+	}
+	private void setIsActive(boolean b) {
+		isActive = b;
+	}
+	public void increasePawnSw() {
+		this.castleSw++;
+		if (this.castleSw == 3) {
+			this.isActive = true;
+			castleSw = 0;
+		}
+	}
+	public void setCastleSw(int castleSw) {
+		this.castleSw = castleSw;
+	}
+	public boolean isActive() {
+		return this.isActive;
+	}
 }
