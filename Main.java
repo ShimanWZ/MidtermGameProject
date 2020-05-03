@@ -12,7 +12,7 @@ import javafx.scene.Scene;
 public class Main extends Application {
 	
 	static Stage window;
-	static Scene mainMenu, settingMenu, initialize, gameScene, winner;
+	static Scene mainMenu, settingMenu, initialize, gameScene, winner, mainGameMenu, shop;
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		window = primaryStage;

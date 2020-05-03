@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import GameCore.BoardContents;
 import GameCore.Castle;
 import GameCore.Cavalry;
@@ -12,9 +13,6 @@ import GameCore.HeadQuarter;
 import GameCore.Player;
 import GameCore.Soldier;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,46 +22,40 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
-
-public class InitializeControler {
-	@FXML private AnchorPane bigPane;
-	@FXML private Label label;
-	private Player turn;	
+public class ShopController {
+	@FXML private AnchorPane pane;
+	private Player turn = MainGameControler.getTurn();
 	private ArrayList<ImageView> tempImgs = new ArrayList<ImageView>();
-	static Game game = new Game();
-
+	private static boolean placed = false;
+	@FXML private Label money;
 	
-	
-	public void initialize() {
-		turn = game.getPlayer1();
+	public void initialize() throws FileNotFoundException {
+		money.setText(turn.getWallet() + "$");
 		drawRawBoard();
+		drawXs(turn);
 	}
 	
 	//----------------------making the base ready to accept a pawn----------------------//
-	@FXML 
-	private void setCavalry() {
+	public void setCavalry() {
 		Game.setContent(BoardContents.CAVALRY);
 		Cavalry.setHorizontalSw(false);
 	}
-	@FXML 
-	private void setCavalry2() {
+	public void setCavalry2() {
 		Game.setContent(BoardContents.CAVALRY);
 		Cavalry.setHorizontalSw(true);
 	}
-	@FXML 
-	private void setSoldier() {
+	public void setSoldier() {
 		Game.setContent(BoardContents.SOLDIER);
 	}
-	@FXML
-	private void setCastle() {
+	public void setCastle() {
 		Game.setContent(BoardContents.CASTLE);
 	}
-	@FXML 
-	private void setHeadQuarter() {
+	public void setHeadQuarter() {
 		Game.setContent(BoardContents.HEADQUARTER);
 	}
 	
-	//---------------------------------placing the pawns-------------------------------//
+	
+	// placing pawn on player's board
 	@FXML
 	private void placePawn(MouseEvent event) throws IOException {
 		boolean xBorder = 100 < event.getSceneX() && event.getSceneX() < 100 + Game.boardWidth;
@@ -75,40 +67,45 @@ public class InitializeControler {
 	
 	private void placePawnOnBoard(MouseEvent event, Player player) throws IOException {
 		
-		//the following statements check if we have valid pawns left and will place pawns on players board
-		if(Game.getContent() == BoardContents.SOLDIER && player.getSoldierCount() < Player.MAX_SOLDIER_COUNT) {
+		placed = false;
+		
+		
+		//the following statements check if we have enough money and will place pawns on players board
+		if(Game.getContent() == BoardContents.SOLDIER && turn.getWallet() >= Soldier.getPrice()) {
 			Soldier.placeSoldier(event.getSceneX(), event.getSceneY(),player);
+			if (placed) turn.setWallet(turn.getWallet() - Soldier.getPrice());
 		}
-		if(Game.getContent() == BoardContents.CAVALRY && player.getCavalryCount() < Player.MAX_CAVALRY_COUNT && Cavalry.isHorizontalSw()) {
+		if(Game.getContent() == BoardContents.CAVALRY && Cavalry.isHorizontalSw() && turn.getWallet() >= Cavalry.getPrice()) {
 			Cavalry.placeCavalry(event.getSceneX(), event.getSceneY(),player);
+			if (placed) turn.setWallet(turn.getWallet() - Cavalry.getPrice());
 		}
-		if(Game.getContent() == BoardContents.CAVALRY && player.getCavalryCount() < Player.MAX_CAVALRY_COUNT && !Cavalry.isHorizontalSw()) {
+		if(Game.getContent() == BoardContents.CAVALRY && !Cavalry.isHorizontalSw() && turn.getWallet() >= Cavalry.getPrice()) {
 			Cavalry.placeCavalry(event.getSceneX(), event.getSceneY(),player);
+			if (placed) turn.setWallet(turn.getWallet() - Cavalry.getPrice());
 		}
-		if(Game.getContent() == BoardContents.CASTLE && player.getCastleCount() < Player.MAX_CASTLE_COUNT) {
+		if(Game.getContent() == BoardContents.CASTLE && turn.getWallet() >= Castle.getPrice()) {
 			Castle.placeCastle(event.getSceneX(), event.getSceneY(),player);
+			if (placed) turn.setWallet(turn.getWallet() - Castle.getPrice());
 		}
-		if(Game.getContent() == BoardContents.HEADQUARTER && player.getHeadquarterCount() < Player.MAX_HEADQU_COUNT) {
+		if(Game.getContent() == BoardContents.HEADQUARTER && turn.getWallet() >= HeadQuarter.getPrice()) {	
 			HeadQuarter.placeHeadQuarter(event.getSceneX(), event.getSceneY(),player);
-		}
+			if (placed) turn.setWallet(turn.getWallet() - HeadQuarter.getPrice());
+			
+		}	
 		
-		//setting nonempty places on board
-		drawXs(turn);
-		
-		//check for placing status , if done then....
-		if (game.getPlayer1().areAllPawnsPlaced() && turn == game.getPlayer1()) {
-			drawRawBoard();
-			turn = game.getPlayer2();
-			label.setText("player two");
+		if(placed) {
+			drawXs(turn);
+			MainGameControler.setIsGonnaGetAtt(MainGameControler.getTurn());
+			Main.window.setScene(Main.gameScene);
 		}
-		if (game.getPlayer2().areAllPawnsPlaced()) setToGameScene();
 	}
 	
-	//-------------------------------drawing methods-----------------------------//
+//-------------------------------drawing methods-----------------------------//
+	
+	//this method will draw reserved board places
 	public void drawXs(Player player) throws FileNotFoundException {
 		double width = (double)Game.boardWidth / Game.boardSize, initX = 100 , initY = 100;
-
-		
+			
 		for (int i = 0 ; i < Game.boardSize ; i++) {
 			for (int j = 0 ; j < Game.boardSize ; j++) {
 				if (player.getGameBoard().getBoardArray()[i][j] != BoardContents.EMPTY) {
@@ -123,12 +120,13 @@ public class InitializeControler {
 				     imageView.setY(curY); 
 				     imageView.setFitHeight(width); 
 				     imageView.setFitWidth(width); 
-
-				    bigPane.getChildren().add(imageView);
+					    pane.getChildren().add(imageView);
 				}
 			}
 		}		
 	}
+	
+	// this method will draw mouse cursor contents
 	public void drawTempXs(Player player) throws FileNotFoundException {
 		
 		double width = (double)Game.boardWidth / Game.boardSize, initX = 100 , initY = 100;
@@ -145,80 +143,73 @@ public class InitializeControler {
 				     
 				     imageView.setX(curX); 
 				     imageView.setY(curY); 
-				     imageView.setFitHeight(width-5); 
-				     imageView.setFitWidth(width-5); 
-				     tempImgs.add(imageView);
-				     bigPane.getChildren().add(imageView);
-				}
+					 imageView.setFitHeight(width-5); 
+					 imageView.setFitWidth(width-5); 
+					 tempImgs.add(imageView);
+					 pane.getChildren().add(imageView);
+				}				
 			}
 		}		
-	}	
+	}
+
+	@FXML
+	private void drawInitBoard(MouseEvent event) throws FileNotFoundException {
+		for (ImageView a: tempImgs ) {
+			pane.getChildren().remove(a);
+		}
+		tempImgs.clear();
+		money.setText(turn.getWallet() + "$");
+		Player initPlayer = new Player();
+		boolean xBorder = 100 < event.getSceneX() && event.getSceneX() < 100 + Game.boardWidth;
+		boolean yBoarder = 100 < event.getSceneY() && event.getSceneY() < 100 + Game.boardWidth;
+		if (xBorder && yBoarder) {		
+		if(Game.getContent() == BoardContents.SOLDIER) {
+				Soldier.placeSoldier(event.getSceneX(), event.getSceneY(),initPlayer);
+			}
+			if(Game.getContent() == BoardContents.CAVALRY && Cavalry.isHorizontalSw()) {
+				Cavalry.placeCavalry(event.getSceneX(), event.getSceneY(),initPlayer);
+			}
+			if(Game.getContent() == BoardContents.CAVALRY && !Cavalry.isHorizontalSw()) {
+				Cavalry.placeCavalry(event.getSceneX(), event.getSceneY(),initPlayer);
+			}
+			if(Game.getContent() == BoardContents.CASTLE) {
+				Castle.placeCastle(event.getSceneX(), event.getSceneY(),initPlayer );
+			}
+			if(Game.getContent() == BoardContents.HEADQUARTER) {
+				HeadQuarter.placeHeadQuarter(event.getSceneX(), event.getSceneY(),initPlayer);
+			}
+		}
+		drawTempXs(initPlayer);
+	}
+	//this method will draw the table
 	private void drawRawBoard() {
 		double curX, curY, width = (double)Game.boardWidth / Game.boardSize, initX = 100 , initY = 100;
 		
 		//drawing background
 		Rectangle r = new Rectangle(initX,initY, initX + Game.boardWidth, initY + Game.boardWidth);
 		r.setFill(Color.rgb(14, 29, 76));
-		bigPane.getChildren().add(r);
+		pane.getChildren().add(r);
 		
 		for (curX = initX ; curX <= initX + Game.boardWidth ; curX += width) {
 			Line l1 = new Line(curX, initY, curX, initY +  Game.boardWidth);
 			l1.setStroke(Color.WHITE);				
 			l1.setFill(Color.WHITE);
-			bigPane.getChildren().add(l1);
+			pane.getChildren().add(l1);
 		}
-		
+			
 		//drawing horizontal lines
 		for (curY = initY ; curY <= initY + Game.boardWidth ; curY += width ) {
 			Line l1 = new Line(initX , curY ,initX +  Game.boardWidth,curY);
 			l1.setStroke(Color.WHITE);
 			l1.setFill(Color.WHITE);
-		    bigPane.getChildren().add(l1);
-
+		   pane.getChildren().add(l1);
 		}		
 	}
-	@FXML
-	private void drawInitBoard(MouseEvent event) throws FileNotFoundException {
-		for (ImageView a: tempImgs ) {
-			bigPane.getChildren().remove(a);
-		}
-		tempImgs.clear();
-		Player initPlayer = new Player();
-		boolean xBorder = 100 < event.getSceneX() && event.getSceneX() < 100 + Game.boardWidth;
-		boolean yBoarder = 100 < event.getSceneY() && event.getSceneY() < 100 + Game.boardWidth;
-
-		if (xBorder && yBoarder) {		
-			if(Game.getContent() == BoardContents.SOLDIER && turn.getSoldierCount() < Player.MAX_SOLDIER_COUNT) {
-				Soldier.placeSoldier(event.getSceneX(), event.getSceneY(),initPlayer);
-			}
-			if(Game.getContent() == BoardContents.CAVALRY && Cavalry.isHorizontalSw() && turn.getCavalryCount() < Player.MAX_CAVALRY_COUNT) {
-				Cavalry.placeCavalry(event.getSceneX(), event.getSceneY(),initPlayer);
-			}
-			if(Game.getContent() == BoardContents.CAVALRY && !Cavalry.isHorizontalSw() && turn.getCavalryCount() < Player.MAX_CAVALRY_COUNT) {
-				Cavalry.placeCavalry(event.getSceneX(), event.getSceneY(),initPlayer);
-			}
-			if(Game.getContent() == BoardContents.CASTLE && turn.getCastleCount() < Player.MAX_CASTLE_COUNT) {
-				Castle.placeCastle(event.getSceneX(), event.getSceneY(),initPlayer );
-			}
-			if(Game.getContent() == BoardContents.HEADQUARTER && turn.getHeadquarterCount() < Player.MAX_HEADQU_COUNT) {
-				HeadQuarter.placeHeadQuarter(event.getSceneX(), event.getSceneY(),initPlayer);
-			}
-		}
-		drawTempXs(initPlayer);
+	//-------------------------------------------------------------------------------//
+	public static void setPlaced(boolean placed) {
+		ShopController.placed = placed;
 	}
-	//--------------------------changing scenes--------------------------//
-	private void setToGameScene() throws IOException {
-		Parent gameScene = FXMLLoader.load(getClass().getResource("MainGameScene.fxml"));
-		Main.gameScene = new Scene(gameScene);
-		Main.gameScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+	public void backToGame() {
 		Main.window.setScene(Main.gameScene);
-	}
-	@FXML
-	private void backToMain() {
-		Main.window.setScene(Main.mainMenu);
-	}
-	//-----------------getting game obj for the main game-------------------------//
-	public static Game getGame() {
-		return game;
 	}
 }

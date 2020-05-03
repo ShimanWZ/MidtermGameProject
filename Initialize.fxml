@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="pane" fx:id="pane" onMouseReleased="#placePawn" prefHeight="900.0" prefWidth="1500.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.InitializeControler">
+<AnchorPane id="pane" fx:id="bigPane" onMouseMoved="#drawInitBoard" onMouseReleased="#placePawn" prefHeight="900.0" prefWidth="1500.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.InitializeControler">
    <children>
       <ImageView fitHeight="268.0" fitWidth="199.0" layoutX="1247.0" layoutY="65.0" onMousePressed="#setCastle">
          <image>

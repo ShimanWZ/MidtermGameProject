@@ -6,5 +6,6 @@ public enum BoardContents {
 	CASTLE,
 	HEADQUARTER,
 	EMPTY,
-	ATTACKED
+	SUCCESS_ATTACKED,
+	EMPTY_ATTACKED
 }

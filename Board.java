@@ -5,6 +5,7 @@ public class Board {
 	
 	public Board() {
 		board = new BoardContents[Game.boardSize][Game.boardSize];
+		
 		for (int i = 0 ; i < Game.boardSize ; i++) {
 			for( int j = 0 ; j < Game.boardSize ; j++) {
 				board[i][j] = BoardContents.EMPTY;

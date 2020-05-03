@@ -1,10 +1,13 @@
 package GameCore;
 
 import UI.MainGameControler;
+import UI.ShopController;
 
 public class HeadQuarter extends Pawn {
 	private boolean isActive = true;
 	private int headQuarterSw = 0;
+	private static int price = 100;
+	
 	
 	//------------------attack methods------------------//
 	public static void headQuarterAttack(double x, double y, Player player) {
@@ -19,7 +22,13 @@ public class HeadQuarter extends Pawn {
 		if (pawnI + 2 < Game.boardSize && pawnJ + 2 < Game.boardSize && isValidForAttack(pawnI,pawnJ, player)) {
 			for (int c1 = pawnI ; c1 < pawnI + 3 ; c1++) {
 				for (int c2 = pawnJ ; c2 < pawnJ + 3 ; c2++) {
-					player.setGameBoard(c1, c2, BoardContents.ATTACKED);
+					if (player.getGameBoard().getBoardArray()[c1][c2] == BoardContents.EMPTY) {
+						player.setGameBoard(c1, c2, BoardContents.EMPTY_ATTACKED);
+					}
+					else {
+						getAttacker(player).setWallet(getAttacker(player).getWallet() + 10);
+						player.setGameBoard(c1, c2, BoardContents.SUCCESS_ATTACKED);
+					}
 				}
 			}
 			afterAttack(MainGameControler.getTurn());
@@ -30,7 +39,8 @@ public class HeadQuarter extends Pawn {
 	protected boolean isValidForAttack(int i, int j, Player player) {
 		for (int c1 = i ; c1 < i + 3 ; c1++) {
 			for (int c2 = j ; c2 < j + 3 ; c2++) {
-				if (player.getGameBoard().getBoardArray()[c1][c2] == BoardContents.ATTACKED) return false;
+				if (player.getGameBoard().getBoardArray()[c1][c2] == BoardContents.SUCCESS_ATTACKED
+						|| player.getGameBoard().getBoardArray()[c1][c2] == BoardContents.EMPTY_ATTACKED) return false;
 			}
 		}
 		return true;
@@ -47,12 +57,31 @@ public class HeadQuarter extends Pawn {
 		
 		if (pawnI + 2 < Game.boardSize && pawnJ + 2 < Game.boardSize && isValidForPlacing(pawnI,pawnJ, player)) {
 			player.increaseHeadquarterCount();
+			ShopController.setPlaced(true);
 			for (int c1 = pawnI ; c1 < pawnI + 3 ; c1++) {
 				for (int c2 = pawnJ ; c2 < pawnJ + 3 ; c2++) {
 					player.setGameBoard(c1, c2, BoardContents.HEADQUARTER);
 				}
 			}
 		}		
+	}
+	
+	public static void placeTempHeadquarter(double x, double y, Player player) {
+		HeadQuarter head = new HeadQuarter();
+		head.tempPlace(x, y, player);
+	}
+	private void tempPlace(double x, double y, Player player) {
+		int pawnI = Utils.getIndexI(y);
+		int pawnJ = Utils.getIndexJ(x);
+		
+		if (pawnI + 2 < Game.boardSize && pawnJ + 2 < Game.boardSize && isValidForPlacing(pawnI,pawnJ, player)) {
+			player.increaseHeadquarterCount();
+			for (int c1 = pawnI ; c1 < pawnI + 3 ; c1++) {
+				for (int c2 = pawnJ ; c2 < pawnJ + 3 ; c2++) {
+					player.setGameBoard(c1, c2, BoardContents.HEADQUARTER);
+				}
+			}
+		}	
 	}
 	@Override
 	protected boolean isValidForPlacing(int i, int j, Player player) {
@@ -70,7 +99,7 @@ public class HeadQuarter extends Pawn {
 		player.getHeadquarter().setIsActive(false);
 		this.setHeadQuarterSw(0);
 	}
-	private void setIsActive(boolean b) {
+	public void setIsActive(boolean b) {
 		isActive = b;
 	}
 	public void increasePawnSw() {
@@ -85,5 +114,16 @@ public class HeadQuarter extends Pawn {
 	}
 	public boolean isActive() {
 		return this.isActive;
+	}
+	public int getHeadQuarterSw() {
+		return headQuarterSw;
+	}
+	//-----------------------------------------------------------------------------//
+	public static int getPrice() {
+		return price;
+	}
+	private Player getAttacker(Player p) {
+		if (p == MainGameControler.game.getPlayer1()) return MainGameControler.game.getPlayer2();
+		else return MainGameControler.game.getPlayer1();
 	}
 }
